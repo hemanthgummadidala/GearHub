@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            GoogleAuthProvider,
+            signInWithPopup,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getDatabase,
+            ref,
+            push,
+            query,
+            orderByChild,
+            equalTo,
+            get
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsj3TvqdxnJHYiQgfBNp3TFH9ZE9Yu6_0",
+            authDomain: "gearhub-1b2ed.firebaseapp.com",
+            projectId: "gearhub-1b2ed",
+            databaseURL: "https://gearhub-1b2ed-default-rtdb.asia-southeast1.firebasedatabase.app",
+            storageBucket: "gearhub-1b2ed.firebasestorage.app",
+            messagingSenderId: "427552964136",
+            appId: "1:427552964136:web:6aa0ac39a5105c5728bf1d",
+            measurementId: "G-YQ1BJ448NV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        window._fbAuth = auth;
+        window._fbDb = db;
+        window._fbCreateUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+        window._fbSignIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+        window._fbOnAuthStateChanged = (cb) => onAuthStateChanged(auth, cb);
+        window._fbGoogleSignIn = () => signInWithPopup(auth, googleProvider);
+        window._fbResetPassword = (email) => sendPasswordResetEmail(auth, email);
+
+        window._fbSaveBooking = (email, bookingData) => {
+            const safeEmail = email.replace(/\./g, '_');
+            const bookingsRef = ref(db, 'bookings/' + safeEmail);
+            return push(bookingsRef, {
+                ...bookingData,
+                bookedOn: new Date().toISOString()
+            });
+        };
+
+        window._fbGetBookings = async (email) => {
+            const safeEmail = email.replace(/\./g, '_');
+            const bookingsRef = ref(db, 'bookings/' + safeEmail);
+            const snapshot = await get(bookingsRef);
+            if (!snapshot.exists()) return [];
+            const data = snapshot.val();
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.isLoggedIn = true;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="section1">
+
+
+        <div class='bgtitle'>
+            <h1 class='title1'>Welcome to</h1>
+            <h1 class='title2'>GearHub</h1>
+        </div>
+        <div class='b1'>
+            <button class='b2' onclick="sectionfrontpage()">Start Engine</button>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="">
+        <div id='sectionfrontpage'>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+                <a class="navbar-brand" href="#">GearHub</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ml-auto">
+                        <a class="nav-link active" href="#home">
+                            Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                        <a class="nav-link " href="#muscle">Muscle</a>
+                        <a class="nav-link" href="#sports">Sports</a>
+                        <a class="nav-link" href="#openwheel">Open Wheel</a>
+                        <a class="nav-link" href="#coupe">Coupe</a>
+                        <a class="nav-link" href="#aboutus">About Us!</a>
+
+                        <!-- Account Button -->
+                        <div class="nav-account-wrapper">
+                            <button class="nav-account-btn" onclick="toggleAccountDropdown()">
+                                <span id="nav-account-label">Login</span>
+                                <span class="nav-account-arrow">▼</span>
+                            </button>
+                            <div class="nav-account-dropdown" id="nav-account-dropdown">
+                                <p class="nav-account-email" id="nav-account-email"></p>
+                                <div class="nav-dropdown-divider" id="nav-history-item">
+                                    <button class="nav-dropdown-btn" onclick="closeDropdownAndShowHistory()">Booking History</button>
+                                </div>
+                                <div class="nav-dropdown-divider">
+                                    <button class="nav-dropdown-btn nav-logout-btn" id="nav-logout-btn" onclick="navLogout()">Logout</button>
+                                    <button class="nav-dropdown-btn nav-login-btn" id="nav-login-btn" onclick="oldAcclogin()">Sign In</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+
+
+
+
+            <div class='container' id='home'>
+                <div class='row'>
+                    <div class=' home-bg-image '>
+                        <h1 class='font'>Welcome to GearHub <br />where speed is unleashed</h1>
+                        <h4>Power in the engine, <br />speed on the road,<br />performence in every heartbeat.</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!--     Sections
+ -->
+            <div class='carSection' id='muscle'>
+                <h2 class='subsection'>Muscle
+                    <hr />
+                </h2>
+                <div class='flexboox'>
+                    <div class='fstcard xbox shadow-lg' onclick="sectionmusclecar1()">
+                        <img src='https://static.wixstatic.com/media/71485a_32142b91e0934ec1b1e76ddf7419c299~mv2.jpg/v1/fill/w_564,h_626,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-place-holder.jpg' class='smallimage' />
+
+                        <h3 class='xbox'>Ford Mustang GT</h3>
+                    </div>
+                    <div class='fstcard xbox shadow-lg' onclick="sectionmusclecar2()">
+                        <img src='data:image/jpeg;base64,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' class='smallimage' />
+                        <h3 class='xbox'>Dodge Charger </h3>
+                    </div>
+                    <div class='fstcard xbox shadow-lg' onclick="sectionmusclecar3()">
+                        <img src='data:image/jpeg;base64,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' class='smallimage' />
+                        <h3 class='xbox'>Dodge Challenger <br />SRT Demon </h3>
+                    </div>
+                    <div class='fstcard xbox shadow-lg' onclick="sectionmusclecar4()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763893891/download_wqeaqc.jpg' class='smallimage' />
+                        <h3 class='xbox'>Chevrolet Camaro<br /> ZL1</h3>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <div class='carSection' id='sports'>
+                <h2 class='subsection'>Sports
+                    <hr />
+                </h2>
+                <div class='flexboox'>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionsportscar1()">
+                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2s4hHEcppADWAvgcAhW-oTKL5tr6EJjohYw&' class='smallimage' />
+                        <!-- fordmustanggt -->
+                        <h3 class='text-center carnamestyle'>BMW M5 CS</h3>
+                    </div>
+                    <div class='fstcard m-3 shadow-lg xbox' onclick="sectionsportscar2()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902905/19-chiron-pur-sport-pflanzgarten-02-1626362186_ctzup7.avif' class='smallimage' />
+                        <h3 class='text-center'>Bugatti Chiron <br />Super Sport 300+</h3>
+                    </div>
+                    <div class='fstcard m-3 shadow-lg xbox' onclick="sectionsportscar3()">
+                        <img src='data:image/jpeg;base64,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' class='smallimage' />
+                        <h3 class='text-center'>Porsche 911 Turbo <br />S</h3>
+                    </div>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionsportscar4()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763894627/white-toyota-supra-mk-parked-lights-showroom-stylish-white-toyota-supra-mk-parked-lights-showroom-260107687_haj3lv.webp' class='smallimage' />
+                        <!-- fordmustanggt -->
+                        <h3 class='text-center carnamestyle'>Toyota Supra GR</h3>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class='carSection' id='openwheel'>
+                <h2 class='subsection'>Open Wheel
+                    <hr />
+                </h2>
+                <div class='flexboox'>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionopenwheelcar1()">
+                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkEUE9jLCDsy7OHxhcO2Kjw2RCmS4BBr96eQ&s' class='smallimage' />
+                        <!-- fordmustanggt -->
+                        <h3 class='text-center'>Ferrari F2004</h3>
+                    </div>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionopenwheelcar2()">
+                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZIoW1cXG6X1DZV8N72_V3AVhf0JCP99diXw&s' class='smallimage' />
+                        <h3 class='text-center'>Red Bull RB19</h3>
+                    </div>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionopenwheelcar3()">
+                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuXiM1vb0MZHxOcSK5-LrA6T8MRE8F9NA0zg&s' class='smallimage' />
+                        <h3 class='text-center'>Mercedes W11</h3>
+                    </div>
+                    <div class='fstcard shadow-lg xbox' onclick="sectionopenwheelcar4()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763901682/images_lyuwj7.jpg' class='smallimage' />
+                        <h3 class='text-center'>Dallara IR-18</h3>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class='carSection' id='coupe'>
+                <h2 class='subsection'>coupe
+                    <hr />
+                </h2>
+                <div class='flexboox'>
+                    <div class='fstcard shadow-lg xbox' onclick="sectioncoupecar1()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902819/bmw-m4-coupe-2560x2560-24113_kwp3zr.jpg' class='smallimage' />
+                        <!-- fordmustanggt -->
+                        <h3 class='text-center'>BMW M4</h3>
+                    </div>
+                    <div class=' fstcard shadow-lg xbox' onclick="sectioncoupecar2()">
+                        <img src='data:image/jpeg;base64,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' class='smallimage' />
+                        <h3 class='text-center'>Audi RS5</h3>
+                    </div>
+                    <div class=' fstcard shadow-lg xbox' onclick="sectioncoupecar4()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902320/download_wsyqw9.jpg' class='smallimage' />
+                        <h3 class='text-center'>Lamborghini <br /> Aventador SVJ</h3>
+                    </div>
+                    <div class='fstcard shadow-lg xbox' onclick="sectioncoupecar3()">
+                        <img src='https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902698/download_zcc1cj.jpg' class='smallimage' />
+                        <h3 class='text-center'>Mercedes-AMG <br />C63 S</h3>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--                            Aboutus
+ -->
+            <div id="aboutus" style="padding:40px; background:#f4f4f4; margin:20px;">
+                <h2 style="text-align:center; margin-bottom:20px;">About Us</h2>
+                <p style="text-align:center; max-width:700px; margin:auto; margin-bottom:30px;">
+                    GearHub – Speed Unleashed is a premium car rental platform designed for automobile enthusiasts who demand performance and luxury.
+                    We offer a curated selection of elite vehicles across four categories — Muscle Cars, Sports Cars, Open Wheel Cars, and Coupe Cars — each representing the pinnacle of automotive engineering.
+                    Our goal is simple: to deliver not just a rental service, but an unforgettable driving experience defined by speed, precision, and passion.
+                </p>
+
+                <div style="display:flex; justify-content:center; gap:40px; flex-wrap:wrap;">
+
+                    <div style="text-align:center; width:200px;">
+
+                        <h3>Bala Abhishikth </h3>
+                        <p>Role: Web Designer</p>
+                    </div>
+
+                    <div style="text-align:center; width:200px;">
+
+                        <h3>Hemanth Venkata Sai </h3>
+                        <p>Role: code Editor</p>
+                    </div>
+
+                    <div style="text-align:center; width:200px;">
+                        <h3>Harshith Reddy</h3>
+                        <p>Role: Content Writer</p>
+                    </div>
+
+                    <div style="text-align:center; width:200px;">
+                        <h3>Pardhiv ganesh chandra</h3>
+                        <p>Role: Content Writer</p>
+                    </div>
+
+                    <div style="text-align:center; width:200px;">
+                        <h3>Vijayendra</h3>
+                        <p>Role: Code Writter</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div id="signUP">
+            <div id='subsignUP' class='shadow-lg'>
+                <div class='mar'>
+                    <div>
+                        <h1 class='text-center headUP mt-3'>Create an account</h1>
+                        <p class='text-center' style='font-size:30px; color:gray;'>Start your journey with us today</p>
+                    </div>
+                    <form id='CAform'>
+                        <div class='p-3 ml-1'>
+                            <Label For="CAfullname" class='labelElUP'>Full name</Label>
+                            <div class='inputEl'>
+                                <Input id="CAfullname" class='shadow-' type="name" placeholder="  Enter your Full name" />
+                            </div>
+                        </div>
+
+                        <div class='p-3 ml-1'>
+                            <Label For="CAemail" class='labelElUP'>Email address</Label>
+                            <div class='inputEl'>
+                                <Input id="CAemail" type="email" placeholder="  Enter your email" />
+                            </div>
+                            <p id='existmail'></p>
+
+                            <Label For="CApassword" class='labelElUP'>Password</Label>
+                            <Input id="CApassword" type='password' placeholder="  Create password" />
+
+
+                            <Label For="CAconfirmpassword" class='labelElUP mt-2'>Confirm Password</Label>
+                            <Input id="CAconfirmpassword" type='password' placeholder="  Confirm password" />
+                        </div>
+                        <div class='d-flex flex-row'>
+                            <input for='terms' id='inputcb' type='checkbox' />
+                            <P id='terms' class='term mt-1 ml-2'>I agree to the <span>Terms of Service</span> and <span>Privacy Policy</span> </P>
+                        </div>
+
+                        <div>
+                            <Button type="submit" class='createAccountBtn' onclick='createAccount()'>Create Account</Button>
+                            <button class='createAccountBtn' onclick='backtohome()'>Back</button>
+
+                        </div>
+                    </form>
+                    <div>
+                        <span>
+                            <hr />
+                        </span>
+                    </div>
+                    <div>
+                        <Button id='googlesignin' onclick='googleSignIn()'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-google mr-2 mb-1" viewBox="0 0 16 16">
+                                <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z" />
+                            </svg>
+                            Continue with Google
+                        </Button>
+                        <p id='googleSignUpError' style='color:red; text-align:center; font-size:14px;'></p>
+                        <p class='accreate'>Already have an account? <button id='goToSignInBtn' class='forgotEl mr-2' onclick='oldAcclogin()'>Sign in</button></p>
+                    </div>
+                    <div style="text-align:center; margin-top:16px; margin-bottom:10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="signIn">
+            <div id='subsignIn' class='shadow-lg'>
+                <div>
+                    <h1 class='text-center head'>Welcome Back</h1>
+                    <p class='text-center' style='font-size:30px; color:gray;'>Sign in to your account to continue</p>
+                </div>
+                <form id='signInform'>
+                    <div class='p-3 ml-4'>
+                        <Label For="signinemail" class='labelEl'>Email address</Label>
+                        <div class='inputEl'>
+                            <Input id="signinemail" type="email" placeholder="  Enter your email" />
+                        </div>
+                    </div>
+                    <div class='p-3 ml-4'>
+                        <div>
+                            <Label For="signinpassword" class='labelEl'>Password</Label>
+                        </div>
+                        <div>
+                            <Input id="signinpassword" type='password' placeholder="  Enter your password" />
+                        </div>
+                        <button class='forgotEl' onclick='forgotPassword()'>Forgot password?</button>
+                    </div>
+                    <p id='signinError'></p>
+                    <div>
+                        <Button type="submit" id='signInbtn' onclick='signInBtn()' class='signbt'>Sign in</Button>
+                        <button class='signbt' onclick='backtohome()'>Back</button>
+
+                    </div>
+                </form>
+                <div>
+                    <span>
+                        <hr />
+                    </span>
+                </div>
+                <div>
+                    <Button id='googlesignin' onclick='googleSignIn()'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-google mr-2 mb-1" viewBox="0 0 16 16">
+                            <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z" />
+                        </svg>
+                        Continue with Google
+                    </Button>
+                    <p id='googleSignInError' style='color:red; text-align:center; font-size:14px;'></p>
+                    <p class='accreate'>Don't have an account? <button id='goToSignUpBtn' class='forgotEl mr-2' onclick='goToSignUp()'>Create One</button></p>
+                </div>
+                <div style="text-align:center; margin-top:16px; margin-bottom:10px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-root" id="booking-root">
+
+            <!-- BOOKING FORM SCREEN -->
+            <div id="booking-screen">
+
+                <header class="page-header">
+                    <h1>Complete Your Booking</h1>
+                    <p class="booking-label">Booking: <span id="br-car-name">—</span></p>
+                </header>
+
+                <div class="br-card">
+                    <form id="booking-form" onsubmit="handleBookingSubmit(event)">
+
+                        <!-- Personal Details -->
+                        <section class="form-section">
+                            <h2 class="section-title">Personal Details</h2>
+
+                            <div class="br-grid-2" style="margin-bottom:20px;">
+                                <div class="br-field">
+                                    <label for="br-full-name">Full Name</label>
+                                    <input type="text" id="br-full-name" placeholder="Full name" required />
+                                </div>
+                                <div class="br-field">
+                                    <label for="br-email">Email</label>
+                                    <input type="email" id="br-email" placeholder="Email address" required />
+                                </div>
+                            </div>
+
+                            <div class="br-field">
+                                <label for="br-phone">Phone Number</label>
+                                <input type="tel" id="br-phone" placeholder="+91 00000-00000" required />
+                            </div>
+                        </section>
+
+                        <div class="br-divider"></div>
+
+                        <!-- Trip Details -->
+                        <section class="form-section" style="margin-bottom:0;">
+                            <h2 class="section-title">Trip Details</h2>
+
+                            <div class="br-field" style="margin-bottom:20px;">
+                                <label for="br-pickup-loc">Location</label>
+                                <input type="text" id="br-pickup-loc" placeholder="Airport, City Center…" required />
+                            </div>
+
+                            <div class="br-grid-2" style="margin-bottom:20px;">
+                                <div class="br-field">
+                                    <label for="br-pickup-date">Pickup Date</label>
+                                    <input type="date" id="br-pickup-date" required />
+                                </div>
+
+
+                                <div class="br-field">
+                                    <label for="br-dropoff-date">Drop-off Date</label>
+                                    <input type="date" id="br-dropoff-date" required />
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- Pricing Preview -->
+                        <div class="price-preview" id="price-preview" style="display:none;">
+                            <div class="price-preview-inner">
+                                <span><strong id="pp-car-name">Car</strong></span>
+                                <span id="pp-rate-line">Rate: —</span>
+                                <span id="pp-days-line">Days: —</span>
+                                <span class="pp-total" id="pp-total-line">Total: —</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-confirm">Confirm Booking</button>
+                        <div style="text-align:center; margin-top:16px;">
+                            <button class='btn-confirm' onclick='backtohome()'>Back</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- CONFIRMATION SCREEN -->
+            <div id="confirmation-screen">
+
+                <div class="success-badge">
+                    <div class="success-icon">✓</div>
+                    <h1>Booking Confirmed!</h1>
+                    <p>Your ride has been successfully booked. Safe travels!</p>
+                </div>
+
+                <div class="confirm-card">
+
+                    <div class="booking-id-strip">
+                        <span class="bid-label"> Booking ID</span>
+                        <span class="bid-value" id="br-booking-id">—</span>
+                    </div>
+
+                    <!-- Personal Details -->
+                    <h2 class="section-title">Personal Details</h2>
+                    <div class="detail-grid" style="margin-bottom:28px;">
+                        <div class="detail-item">
+                            <div class="d-label">Full Name</div>
+                            <div class="d-value" id="br-c-name">—</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="d-label">Email</div>
+                            <div class="d-value" id="br-c-email">—</div>
+                        </div>
+                        <div class="detail-item full-width">
+                            <div class="d-label">Phone Number</div>
+                            <div class="d-value" id="br-c-phone">—</div>
+                        </div>
+                    </div>
+
+                    <div class="br-divider" style="margin:0 0 28px;"></div>
+
+                    <!-- Trip Details -->
+                    <h2 class="section-title">Trip Details</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item full-width">
+                            <div class="d-label">Pickup Location</div>
+                            <div class="d-value" id="br-c-location">—</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="d-label">Pickup Date</div>
+                            <div class="d-value" id="br-c-pickup-date">—</div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="d-label">Drop-off Date</div>
+                            <div class="d-value" id="br-c-dropoff-date">—</div>
+                        </div>
+
+                    </div>
+
+                    <div class="br-divider" style="margin:20px 0;"></div>
+
+                    <!-- Pricing Summary -->
+                    <h2 class="section-title">Pricing Summary</h2>
+                    <div class="pricing-summary">
+                        <div class="price-row">
+                            <span class="price-label">Rate per Day</span>
+                            <span class="price-val" id="br-c-rate">—</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Number of Days</span>
+                            <span class="price-val" id="br-c-days">—</span>
+                        </div>
+                        <div class="price-row total-row">
+                            <span class="price-label">Total Estimated Cost</span>
+                            <span class="price-val" id="br-c-total">—</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-another" onclick="brBookAnother()">＋ Book Another Ride</button>
+                    <button class='btn-another' onclick='backtohome()'>Go to Front Page</button>
+                    <button class='btn-another' onclick='showBookingHistory()'>View My Bookings</button>
+
+                    <div style="text-align:center; margin-top:14px; margin-bottom:10px;">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Booking History Section -->
+        <div id="booking-history">
+            <div class="bh-wrapper">
+                <div class="bh-header">
+                    <h2 class="bh-title">My Booking History</h2>
+                    <div>
+                        <span id="booking-count" class="bh-count"></span>
+                        <button onclick="backtohome()" class="bh-back-btn">← Back</button>
+                    </div>
+                </div>
+
+                <!-- No bookings message -->
+                <p id="no-bookings-msg" class="bh-no-bookings">No bookings found. Book your first ride!</p>
+
+                <!-- Booking Cards -->
+                <div id="history-card-1" class="history-card">
+                    <div class="hc-header">
+                        <span class="hc-carname" id="hc1-carname"></span>
+                        <span class="hc-bid" id="hc1-bid"></span>
+                    </div>
+                    <div class="hc-grid">
+                        <div><span class="hc-label">Pickup:</span> <span id="hc1-pickup"></span></div>
+                        <div><span class="hc-label">Drop-off:</span> <span id="hc1-dropoff"></span></div>
+                        <div><span class="hc-label">Location:</span> <span id="hc1-location"></span></div>
+                        <div><span class="hc-label">Days:</span> <span id="hc1-days"></span></div>
+                        <div><span class="hc-label">Rate:</span> <span id="hc1-rate"></span></div>
+                        <div class="hc-total">Total: <span id="hc1-total"></span></div>
+                    </div>
+                    <div class="hc-date">Booked on: <span id="hc1-date"></span></div>
+                </div>
+
+                <div id="history-card-2" class="history-card">
+                    <div class="hc-header">
+                        <span class="hc-carname" id="hc2-carname"></span>
+                        <span class="hc-bid" id="hc2-bid"></span>
+                    </div>
+                    <div class="hc-grid">
+                        <div><span class="hc-label">Pickup:</span> <span id="hc2-pickup"></span></div>
+                        <div><span class="hc-label">Drop-off:</span> <span id="hc2-dropoff"></span></div>
+                        <div><span class="hc-label">Location:</span> <span id="hc2-location"></span></div>
+                        <div><span class="hc-label">Days:</span> <span id="hc2-days"></span></div>
+                        <div><span class="hc-label">Rate:</span> <span id="hc2-rate"></span></div>
+                        <div class="hc-total">Total: <span id="hc2-total"></span></div>
+                    </div>
+                    <div class="hc-date">Booked on: <span id="hc2-date"></span></div>
+                </div>
+
+                <div id="history-card-3" class="history-card">
+                    <div class="hc-header">
+                        <span class="hc-carname" id="hc3-carname"></span>
+                        <span class="hc-bid" id="hc3-bid"></span>
+                    </div>
+                    <div class="hc-grid">
+                        <div><span class="hc-label">Pickup:</span> <span id="hc3-pickup"></span></div>
+                        <div><span class="hc-label">Drop-off:</span> <span id="hc3-dropoff"></span></div>
+                        <div><span class="hc-label">Location:</span> <span id="hc3-location"></span></div>
+                        <div><span class="hc-label">Days:</span> <span id="hc3-days"></span></div>
+                        <div><span class="hc-label">Rate:</span> <span id="hc3-rate"></span></div>
+                        <div class="hc-total">Total: <span id="hc3-total"></span></div>
+                    </div>
+                    <div class="hc-date">Booked on: <span id="hc3-date"></span></div>
+                </div>
+
+                <div id="history-card-4" class="history-card">
+                    <div class="hc-header">
+                        <span class="hc-carname" id="hc4-carname"></span>
+                        <span class="hc-bid" id="hc4-bid"></span>
+                    </div>
+                    <div class="hc-grid">
+                        <div><span class="hc-label">Pickup:</span> <span id="hc4-pickup"></span></div>
+                        <div><span class="hc-label">Drop-off:</span> <span id="hc4-dropoff"></span></div>
+                        <div><span class="hc-label">Location:</span> <span id="hc4-location"></span></div>
+                        <div><span class="hc-label">Days:</span> <span id="hc4-days"></span></div>
+                        <div><span class="hc-label">Rate:</span> <span id="hc4-rate"></span></div>
+                        <div class="hc-total">Total: <span id="hc4-total"></span></div>
+                    </div>
+                    <div class="hc-date">Booked on: <span id="hc4-date"></span></div>
+                </div>
+
+                <div id="history-card-5" class="history-card">
+                    <div class="hc-header">
+                        <span class="hc-carname" id="hc5-carname"></span>
+                        <span class="hc-bid" id="hc5-bid"></span>
+                    </div>
+                    <div class="hc-grid">
+                        <div><span class="hc-label">Pickup:</span> <span id="hc5-pickup"></span></div>
+                        <div><span class="hc-label">Drop-off:</span> <span id="hc5-dropoff"></span></div>
+                        <div><span class="hc-label">Location:</span> <span id="hc5-location"></span></div>
+                        <div><span class="hc-label">Days:</span> <span id="hc5-days"></span></div>
+                        <div><span class="hc-label">Rate:</span> <span id="hc5-rate"></span></div>
+                        <div class="hc-total">Total: <span id="hc5-total"></span></div>
+                    </div>
+                    <div class="hc-date">Booked on: <span id="hc5-date"></span></div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--     carousel
+ -->
+        <div class='m-3' id='sectionmusclecar1' data-price='299'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763831499/ford-mustang-gt-frente-11065_ugends.webp" class="carouselimg d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763831625/pexels-introspectivedsgn-18038881_qidvyu.jpg" class="carouselimg d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763831669/images_bwusaa.jpg" class=" carouselimg d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!-- fordmustanggt -->
+            <h1 class='navbar-brand1 textsizes'>Ford Mustang Gt</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>450 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>230 Km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'> Rental Price</p>
+                    <h1 class='price-tag'>₹24,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>4.3 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Ford Mustang GT is one of the most iconic muscle cars in automotive history, known for its raw power and thrilling performance. Equipped with a mighty 5.0L V8 engine, it delivers an unforgettable driving experience with its deep, roaring exhaust note. Its aggressive design, bold stance, and modern aerodynamics make it instantly recognizable on any road. Accelerating from 0 to 100 km/h in just over 4 seconds, the Mustang GT offers both speed and excitement. Loved by car enthusiasts worldwide, it represents the perfect blend of American muscle, heritage, and modern engineering.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionmusclecar2' data-price='399'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832277/302501_2018_Dodge_Challenger_hduu4j.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832417/images_1_vhfkou.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832427/images_2_dezhye.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!-- fordmustanggt -->
+            <h1 class='navbar-brand1 textsizes text-center'>Dodge Charger Hellcat</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>717 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>315 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹32,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>3.6 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Dodge Charger Hellcat is one of the most powerful and aggressive muscle cars ever built, known for its incredible straight-line speed and unmistakable presence. Powered by a supercharged 6.2L HEMI V8 engine, it produces over 700 horsepower, making it a true beast on the road. The Hellcat combines classic American muscle with modern engineering, delivering explosive acceleration and a roaring exhaust that commands attention. Its widebody design, bold lines, and performance features give it both style and dominance.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+        <div class='m-3' id='sectionmusclecar3' data-price='499'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832916/download_1_fydsho.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832919/download_2_uvctvf.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763832978/download_dvrm2m.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!-- fordmustanggt -->
+            <h1 class='navbar-brand1 textsizes text-center'>Dodge Challenger SRT Demon</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>840 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>340 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'> Rental Price</p>
+                    <h1 class='price-tag'>₹41,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.9 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Dodge Challenger SRT Demon is one of the most extreme and powerful muscle cars ever created, engineered specifically for unmatched straight-line performance. Its supercharged 6.2L HEMI V8 produces an astonishing 840 horsepower with race fuel, making it the fastest accelerating production car of its time. The Demon launches from 0 to 100 km/h in under 3 seconds, thanks to drag-focused features like Launch Control, TransBrake, and massive drag radial tires.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionmusclecar4' data-price='349'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763893250/1a1934233073779.Y3JvcCwxMDgwLDg0NCwwLDI1MQ_xpu4hc.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763893267/pngtree-2020-chevrolet-camaro-zl1-concept-car-image_2922586_j1zbwz.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763893250/1a1934233073779.Y3JvcCwxMDgwLDg0NCwwLDI1MQ_xpu4hc.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!-- fordmustanggt -->
+            <h1 class='navbar-brand1 textsizes text-center'>Chevrolet Camaro ZL1</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>650 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>325 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹28,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>5 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Chevrolet Camaro ZL1 is a high-performance muscle car built for speed, power, and precision. Its supercharged V8 engine delivers explosive acceleration, making it one of the fastest Camaros ever produced. With advanced aerodynamics and track-ready engineering, the ZL1 handles corners with exceptional control. Its aggressive design and deep exhaust note give it a bold presence on any road. Combining American muscle with modern technology, the Camaro ZL1 stands as a true icon of performance driving.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+
+        <!--                                           Sport
+ <-->
+        <div class='m-3' id='sectionsportscar1' data-price='449'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833223/bmw-m5-cs-stage-teaser-02_owvdsz.avif" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833229/P90411224_highRes__mid_z4cwfq.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833219/2021_bmw_m5_cs_exterior_52_ifzy6q.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          BMW M5 Cs
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>BMW M5 CS</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>617 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>305 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'> Rental Price</p>
+                    <h1 class='price-tag'>₹37,499<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>3.1 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The BMW M5 is a masterpiece of engineering that blends luxury, precision, and high-performance power into a single aggressive sports sedan. Powered by a twin-turbocharged V8 engine, the M5 delivers explosive acceleration and razor-sharp handling, making it one of the fastest sedans ever built. Its refined interior, advanced technology, and signature M-tuned dynamics create a driving experience that is both thrilling and comfortable. With its bold design, incredible power, and everyday practicality, the BMW M5 stands as the ultimate performance sedan, capable of dominating both the road and the track with ease.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+        <div class='m-3' id='sectionsportscar2' data-price='4999'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833510/6423aef2e7e3567fc7750d3a836e32e9x_w11q6x.avif" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833499/photo-1688417438893-7d4b4da14a87_ucojmq.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833491/Bugatti-Chiron-Gear-Patrol-Lead-Featured-jpg_vbnoey.webp" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Bugatti Chiron Super Sports 300+</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>1,578 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>490 km/h (World Record)</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹3,99,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.3 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Bugatti Chiron is one of the most extraordinary hypercars ever built, combining extreme performance with unmatched luxury and engineering precision. Powered by an 8.0-liter quad-turbocharged W16 engine, the Chiron produces an astonishing 1,500 horsepower, allowing it to accelerate from 0 to 100 km/h in just 2.4 seconds. Its top speed exceeds 420 km/h, placing it among the fastest production cars in the world. With its sculpted aerodynamic design, advanced technology, and handcrafted interior, the Chiron represents the absolute peak of automotive excellence. Built in very limited numbers, it stands as a true symbol of speed, power, and exclusivity.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionsportscar3' data-price='699'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833707/photo-1634673970798-a15ae56f6c65_f9zhb8.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833733/w1200_yichecar_161729375639392.jpg_g3m6l1.webp" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763833718/istockphoto-1416992549-612x612_gamfdt.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Porsche 911 Turbo S</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>640 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>330 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹57,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.6 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Porsche 911 is one of the most iconic sports cars ever built, known for its timeless design and exceptional engineering. With its unique rear-engine layout, the 911 delivers unmatched balance and sharp handling on every corner. Its powerful engines provide thrilling acceleration, making it a favorite among driving enthusiasts. Over decades, the 911 has evolved while maintaining its signature shape and character. Renowned for precision, performance, and reliability, it remains a symbol of true sports car excellence.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionsportscar4' data-price='249'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763894663/pexels-dbaler-9212878_tsumqs.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763894681/download_vmep9n.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763894670/download_gxsxks.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          BMW M5 Cs
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Toyota Supra GR</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>382 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>250 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹20,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>4.1 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Toyota GR Supra is a sharp and powerful sports coupe built for pure driving excitement.Its 3.0L turbocharged engine produces an impressive 382 HP, giving it incredible punch on the road.With a 0–100 km/h time of around 3.9 seconds, it accelerates with thrilling intensity.The Supra reaches a top speed of 250 km/h, showcasing its strong performance capability.Combining agility, power, and iconic style, the GR Supra stands as one of the most exciting modern sports cars.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+        <!--  open wheel -->
+
+
+        <div class='m-3' id='sectionopenwheelcar1' data-price='2499'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834003/ferrari-f2004-30543-2560x1440_sqetgf.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834060/2004-rs-1017359689-sch-20040815-0413-15-a3-6489e81c4e35f_bihqm7.avif" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834047/wp11200443_zggi4h.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Ferrari F2004</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>900 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>360+ km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹1,99,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.4 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Ferrari F2004 is considered one of the most dominant Formula 1 cars in history, engineered for unmatched speed and precision. Powered by a screaming 3.0L V10 engine, it delivered extraordinary acceleration and breathtaking performance. Its advanced aerodynamics and flawless balance helped Michael Schumacher secure one of his greatest championship seasons. The F2004 broke multiple lap records, many of which stood for over a decade. Even today, it remains a legendary symbol of Ferrari’s engineering excellence and racing dominance.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionopenwheelcar2' data-price='3999'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834340/max-verstappen-red-bull-racing_w3nju4.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834346/melbourne-australia-april-01-max-600w-2285030019_txx2xx.webp" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834334/postersf1-red-bull-rb19-verstappen-miami-gp-video_dyjgqh_xqd5pt.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Red Bull RB19</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>1000 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>355 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹3,29,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.6 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Red Bull RB19 is one of the most dominant Formula 1 cars ever built, setting new records in the 2023 season. Powered by an incredibly efficient aerodynamic design and a powerful Honda-built engine, it delivered unmatched performance on every type of circuit. Max Verstappen showcased its true potential by winning an extraordinary number of races with ease. The RB19 combined speed, stability, and precision, making it nearly unbeatable throughout the year. It stands as one of the greatest engineering achievements in modern F1 history.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectionopenwheelcar3' data-price='3499'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834718/Lewis_Hamilton-Mercedes_W11__5_yhkkmq.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834700/postersf1-mercedes-w11-hamiltonn-l-car-v001-video_letl9g_r70pdr.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834733/mercedes-amg-f1-w11-eq-performance-formula-one-cars-formula-3840x2160-7550_jzdu4w.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <h1 class='navbar-brand1 textsizes text-center'>Mercedes W11</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>1000+ HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>350–360 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'> Rental Price</p>
+                    <h1 class='price-tag'>₹2,89,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.6 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Dallara IR-18 is the current-generation IndyCar chassis known for its incredible speed, strength, and precision on both ovals and road courses.Powered by a twin-turbo V6 engine, it delivers explosive acceleration and exceptional top-end performance.Its advanced aerodynamics and sturdy design make it stable at extreme speeds, especially during the Indianapolis 500.Drivers praise the IR-18 for its balance, control, and intense racing feel, making every lap exciting.Built for high-speed endurance, the IR-18 stands as one of the most versatile and powerful open-wheel race cars in modern motorsport.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+        <div class='m-3' id='sectionopenwheelcar4' data-price='1999'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763901508/mirza-rustemovic-51869586507-c9fe7262ab-o_c9yp4e.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763901518/747613_1_hq6uqi.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763901593/download_wrvz0j.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Dallara IR-18</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>700–750 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>380–386 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'> Rental Price</p>
+                    <h1 class='price-tag'>₹1,64,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.8 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Dallara IR-18 is the current-generation IndyCar chassis known for its incredible speed, strength, and precision on both ovals and road courses.Powered by a twin-turbo V6 engine, it delivers explosive acceleration and exceptional top-end performance.Its advanced aerodynamics and sturdy design make it stable at extreme speeds, especially during the Indianapolis 500.Drivers praise the IR-18 for its balance, control, and intense racing feel, making every lap exciting.Built for high-speed endurance, the IR-18 stands as one of the most versatile and powerful open-wheel race cars in modern motorsport.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class='m-3' id='sectioncoupecar1' data-price='399'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835005/bmw-4-series-coupe-m-automobiles-sp-desktop.jpg.asset.1677150187416_hrph5f.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763834999/21895_cjl0l7.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835020/P90548594-the-all-new-bmw-m4-cs-05-2024-2250px_igyknz.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>BMW M4</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>503 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>290 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹32,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>3.5 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The BMW M4 is a high-performance sports coupe that perfectly blends power, precision, and modern engineering. Its twin-turbo inline-six engine delivers explosive acceleration, giving the M4 an exciting and responsive driving feel. With sharp handling, advanced aerodynamics, and M-tuned technology, it performs like a true track-focused machine. The aggressive design, wide stance, and signature M details make it stand out instantly on the road. Combining luxury with pure performance, the BMW M4 remains one of the most popular and thrilling sports cars in its class.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectioncoupecar2' data-price='349'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835287/HD-wallpaper-audi-rs5-coupe-2020-front-view-exterior-gray-coupe-new-gray-rs5-coupe-tuning-rs5-coupe-german-cars-audi_imnpsh.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835294/HD-wallpaper-audi-audi-rs5-car-silver-car-sport-car_truoh1.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835287/HD-wallpaper-audi-rs5-coupe-2020-front-view-exterior-gray-coupe-new-gray-rs5-coupe-tuning-rs5-coupe-german-cars-audi_imnpsh.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Audi RS5</h1>
+            <div class='flexboox1 '>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>444 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>280 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹28,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>3.9 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Audi RS5 is a dynamic and refined performance coupe that delivers an impressive blend of speed, control, and luxury. Powered by a twin-turbo V6 engine, it offers sharp acceleration and smooth power delivery on any road. Its Quattro all-wheel-drive system ensures excellent grip and stability, making the RS5 confident in both corners and straight-line sprints. The bold exterior design, with its aggressive grille and sporty stance, gives it a strong road presence. Combining comfort, precision, and performance, the Audi RS5 stands out as one of the most versatile sports coupes in its class.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+        <div class='m-3' id='sectioncoupecar3' data-price='449'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835511/preview-928x522_itx3or.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835534/images_3_yeuil8.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763835540/download_3_kzmf8o.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Mercedes-AMG C63 S</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>503 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>290 km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹37,499<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>3.8 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Mercedes-AMG C63 S is a brutal yet refined performance machine that combines German engineering with raw V8 power. Its handcrafted 4.0-liter twin-turbo engine delivers explosive acceleration, giving the C63 S a thrilling and aggressive character. With sharp handling, advanced AMG technology, and a precise suspension setup, it performs confidently both on the track and the street. The bold design, wide stance, and signature AMG exhaust growl make it instantly recognizable.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+
+
+
+
+        <div class='m-3' id='sectioncoupecar4' data-price='1499'>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902253/lamborghini-aventador-svj-rojo-6299_jgx8ht.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902290/images_x8vvmn.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://res.cloudinary.com/dnchhgkzx/image/upload/v1763902259/download_dyuwkr.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <!--          Bugatti
+ -->
+            <h1 class='navbar-brand1 textsizes text-center'>Lamborghini Avenator SVJ</h1>
+            <div class='flexboox1'>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Power</p>
+                    <h1>770 HP</h1>
+                </div>
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand '>Top Speed</p>
+                    <h1>350+ km/h</h1>
+                </div>
+                <div class='m-5 features price-feature'>
+                    <p class='text-center navbar-brand'>Rental Price</p>
+                    <h1 class='price-tag'>₹1,24,999<span class='per-day'>/day</span></h1>
+                </div>
+
+                <div class='m-5 features'>
+                    <p class='text-center navbar-brand'>0~100kph</p>
+                    <h1>2.8 seconds</h1>
+                </div>
+            </div>
+            <h2 style='padding:20px '>About</h2>
+            <p class='aboutcars'>The Lamborghini Aventador SVJ is a masterpiece of speed, power, and extreme aerodynamics.Its 770 HP V12 engine delivers breathtaking acceleration and an unmistakable roaring sound.With a top speed of over 350 km/h, it stands among the fastest naturally aspirated supercars ever made.The SVJ’s advanced ALA aerodynamic system gives it incredible grip and track performance.Combining sharp design and raw performance, the Aventador SVJ is one of Lamborghini’s most iconic creations.</p>
+            <div class='tobutn'>
+                <button id='bookaRide' onclick='bookaRide()'>Book a Ride</button>
+                <button class='butn' onclick='backtohome()'>Back to Garage</button>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="projecttest.css" />
+    <script src="projecttest.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1212 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+
+.bgtitle {
+    display: flex;
+    flex-direction: column;
+
+    background-color: gray;
+    background-image: url('https://i.pinimg.com/736x/a8/5f/89/a85f89df3efe0597b65f90c226de52f1.jpg');
+    background-size: cover;
+    height: 600px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.carSection {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 20% cover 45%;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.title1 {
+    font-family: 'googleapis';
+    font-size: 60px;
+    display: flex;
+    color: gold;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation-name: anime1;
+    animation-duration: 5s;
+    animation-timing-function: ease;
+    animation-iteration-count: 1000;
+
+}
+
+.title2 {
+    font-family: 'Verdana';
+    font-size: 60px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation-name: anime2;
+    animation-duration: 5s;
+    animation-timing-function: ease;
+    animation-iteration-count: 1000;
+
+}
+
+@keyframes anime1 {
+    0% {
+        transform: translate(-10000px, 100px);
+    }
+
+    45% {
+        transform: translate(10px, 100px);
+    }
+
+    65% {
+        transform: translate(20px, 100px);
+    }
+
+    100% {
+        transform: translate(1000px, 100px);
+    }
+}
+
+
+@keyframes anime2 {
+    0% {
+        transform: translate(10000px, 100px);
+    }
+
+    45% {
+        transform: translate(50px, 100px);
+    }
+
+    65% {
+        transform: translate(40px, 100px);
+    }
+
+    100% {
+        transform: translate(-1000px, 100px);
+    }
+}
+
+.b1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-image: linear-gradient(to bottom, black);
+    height: 800px;
+    align-content: center;
+}
+
+.b2 {
+    transform: translate(0px, -10px);
+    font-family: 'Georgia';
+    font-weight: bold;
+    width: 160px;
+    border-radius: 190px;
+    height: 150px;
+    font-size: 25px;
+    background-color: gold;
+    animation-delay: 0s;
+    animation-name: butn;
+    animation-duration: 3s;
+    animation-iteration-count: 1;
+
+}
+
+@keyframes butn {
+    0% {
+        transform: translate(0px, 10000px);
+    }
+
+    50% {
+        transform: translate(0px, 0.1px);
+    }
+
+    100% {
+        transform: translate(0px, 50px);
+    }
+}
+
+.home-bg-image {
+    height: 70vh;
+    width: 170vh;
+    background-image: url('https://w0.peakpx.com/wallpaper/758/242/HD-wallpaper-bmw-headlights-lights-car-dark.jpg');
+    background-size: cover;
+
+    padding: 60px;
+}
+
+.navbar-brand {
+    font-family: 'Georgia';
+    font-weight: bold;
+    text-align: center;
+}
+
+.navbar-brand1 {
+    font-family: Verdana;
+    font-weight: bold;
+    text-align: center;
+    background-image: linear-gradient(lightgray, white);
+}
+
+.font {
+    font-family: 'Playfair Display';
+    font-weight: bold;
+    color: white;
+}
+
+h4 {
+    font-style: italic;
+    color: gray;
+}
+
+
+.subsection {
+    padding: 20px;
+}
+
+.smallimage {
+    height: 250px;
+    width: 220px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+
+}
+
+
+.xbox:hover {
+    transform: scale(1.06);
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    border-color: black;
+}
+
+.carnamestyle {
+    color: black;
+
+
+}
+
+
+
+.textsizes {
+
+    font-size: 50px;
+}
+
+.fstcard {
+    padding: 20px;
+    border: 2px solid gray;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.flexboox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0px;
+}
+
+.flexboox1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-family: 'Times New Roman';
+
+    border: 2px solid white;
+}
+
+
+
+
+.aboutcars {
+    font-size: 20px;
+    padding: 30px;
+    font-weight: 30;
+}
+
+.tobutn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 30px;
+}
+
+.butn {
+    height: 70px;
+    font-family: 'googleapis';
+    font-size: 20px;
+    width: 190px;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    border-color: gray;
+    border-style: solid;
+}
+
+#bookaRide {
+    height: 70px;
+    font-family: 'termina';
+    font-size: 20px;
+    width: 190px;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    border-color: gray;
+    border-style: solid;
+    margin-right: 20px;
+}
+
+#bookaRide:hover {
+    background-color: #b38f6f;
+    color: #161616;
+}
+
+.features {
+
+    height: 130px;
+    width: 250px;
+    text-align: center;
+
+    border-radius: 20px;
+
+}
+
+.butn:hover {
+    background-color: black;
+    color: white;
+}
+
+#subsignUP {
+    transform: scale(0.6);
+    height: 1300px;
+    width: 650px;
+    border: 0px solid gray;
+    border-radius: 10px;
+    font-family: 'Roboto';
+    margin-left: 450px;
+
+}
+
+#signUP {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.headUP {
+    font-size: 60px;
+    font-weight: 600;
+    font-family: 'Roboto';
+
+}
+
+.mar {
+    padding-top: 120px;
+}
+
+.labelElUP {
+    font-size: 28px;
+    margin-left: 33px;
+}
+
+input {
+    height: 70px;
+    width: 80%;
+    background: transparent;
+    border: 1px solid gray;
+    outline: none;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 24px;
+    color: black;
+    margin-left: 30px;
+}
+
+#inputcb {
+    height: 20px;
+    width: 20px;
+    background: transparent;
+    border: 1px solid gray;
+    outline: none;
+    color: #fff;
+    border-radius: 100px;
+    font-size: 24px;
+    margin-top: 10px;
+    margin-left: 50px;
+}
+
+.term {
+    font-size: 20px;
+    color: gray;
+}
+
+span {
+    font-weight: 600;
+    color: black;
+}
+
+.forgotEl {
+    border: 0.5px white;
+    background: transparent;
+    margin-top: 10px;
+    font-size: 20px;
+    margin-left: 30px;
+}
+
+#existmail {
+    margin-left: 40px;
+    color: red;
+}
+
+.createAccountBtn {
+    background-color: black;
+    border-radius: 8px;
+    font-size: 24px;
+    color: white;
+    border: 1px solid black;
+    height: 60px;
+    width: 75%;
+    margin-left: 50px;
+    margin-bottom: 35px;
+}
+
+#googlesignin {
+    margin-left: 70px;
+    font-size: 30px;
+    border: 1px solid black;
+    border-radius: 8px;
+    width: 74%;
+    height: 60px;
+    background: transparent;
+    margin-top: 20px;
+}
+
+#googlesignin:hover {
+    background-color: #c3dbe7;
+}
+
+.accreate {
+    font-size: 20px;
+    margin-left: 150px;
+    margin-top: 20px;
+    color: gray;
+}
+
+#newAcc {
+    border: 0.5px white;
+    background: transparent;
+    font-size: 20px;
+}
+
+#newAcc:hover {
+    border: 0.5px white;
+    background: transparent;
+    font-size: 20px;
+}
+
+#subsignIn {
+    transform: scale(0.6);
+    height: 1000px;
+    width: 650px;
+    border: 0px solid gray;
+    margin: 10px;
+    margin-left: 450px;
+    border-radius: 10px;
+    font-family: 'Roboto';
+
+}
+
+#signIn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.head {
+    font-size: 60px;
+    font-weight: 600;
+    font-family: 'Roboto';
+    margin-top: 90px;
+    padding-top: 100px;
+
+}
+
+.labelEl {
+    font-size: 28px;
+    margin-left: 33px;
+}
+
+#signinError {
+    margin-left: 80px;
+    color: red;
+}
+
+input {
+    height: 70px;
+    width: 80%;
+    background: transparent;
+    border: 1px solid gray;
+    outline: none;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 24px;
+    color: black;
+    margin-left: 30px;
+}
+
+.forgotEl {
+    border: 0.5px white;
+    background: transparent;
+    margin-top: 10px;
+    font-size: 20px;
+    margin-left: 30px;
+}
+
+.signbt {
+    background-color: black;
+    border-radius: 8px;
+    font-size: 24px;
+    color: white;
+    border: 1px solid black;
+    height: 60px;
+    width: 73%;
+    margin-left: 70px;
+    margin-bottom: 35px;
+}
+
+#googlesignin {
+    margin-left: 70px;
+    font-size: 30px;
+    border: 1px solid black;
+    border-radius: 8px;
+    width: 74%;
+    height: 60px;
+    background: transparent;
+    margin-top: 20px;
+}
+
+#googlesignin:hover {
+    background-color: #c3dbe7;
+}
+
+.accreate {
+    font-size: 20px;
+    margin-left: 150px;
+    margin-top: 20px;
+    color: gray;
+}
+
+#newAcc {
+    border: 0.5px white;
+    background: transparent;
+    font-size: 20px;
+}
+
+.booking-root *,
+.booking-root *::before,
+.booking-root *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Page wrapper ──────────────────────────────── */
+.booking-root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 16px 60px;
+    background: #f3f4f6;
+    font-family: 'DM Sans', sans-serif;
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page header ───────────────────────────────── */
+.booking-root .page-header {
+    width: 100%;
+    max-width: 780px;
+    margin-bottom: 32px;
+    text-align: center;
+    animation: br-fadeUp 0.55s ease both;
+}
+
+.booking-root .page-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #111827;
+    margin-bottom: 6px;
+    font-style: normal;
+}
+
+.booking-root .page-header .booking-label {
+    font-size: 15px;
+    color: #6b7280;
+    font-weight: 400;
+}
+
+/* ── Booking form card ─────────────────────────── */
+.booking-root .br-card {
+    width: 100%;
+    max-width: 780px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 40px 44px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+    animation: br-fadeUp 0.65s ease 0.1s both;
+}
+
+/* ── Section heading ───────────────────────────── */
+.booking-root .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    font-style: normal;
+}
+
+/* ── Form section spacing ──────────────────────── */
+.booking-root .form-section {
+    margin-bottom: 36px;
+}
+
+/* ── Two-column grid ───────────────────────────── */
+.booking-root .br-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* ── Field wrapper ─────────────────────────────── */
+.booking-root .br-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.booking-root .br-field label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    letter-spacing: 0.01em;
+    font-style: normal;
+}
+
+/* ── Inputs — fully overriding any parent styles ── */
+.booking-root .br-field input[type="text"],
+.booking-root .br-field input[type="email"],
+.booking-root .br-field input[type="tel"],
+.booking-root .br-field input[type="date"],
+.booking-root .br-field input[type="time"] {
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 16px !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 15px !important;
+    color: #111827 !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    box-shadow: none !important;
+}
+
+.booking-root .br-field input[type="text"]::placeholder,
+.booking-root .br-field input[type="email"]::placeholder,
+.booking-root .br-field input[type="tel"]::placeholder,
+.booking-root .br-field input[type="date"]::placeholder,
+.booking-root .br-field input[type="time"]::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+.booking-root .br-field input[type="text"]:focus,
+.booking-root .br-field input[type="email"]:focus,
+.booking-root .br-field input[type="tel"]:focus,
+.booking-root .br-field input[type="date"]:focus,
+.booking-root .br-field input[type="time"]:focus {
+    border-color: #374151 !important;
+    box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.08) !important;
+}
+
+/* ── Horizontal divider ────────────────────────── */
+.booking-root .br-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 32px 0;
+}
+
+/* ── Confirm booking button ────────────────────── */
+.booking-root .btn-confirm {
+    display: block;
+    width: 100%;
+    height: 52px;
+    margin-top: 32px;
+    background: #1f2937;
+    color: #ffffff;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(31, 41, 55, 0.18);
+}
+
+.booking-root .btn-confirm:hover {
+    background: #111827;
+    box-shadow: 0 4px 16px rgba(31, 41, 55, 0.28);
+    transform: translateY(-1px);
+}
+
+.booking-root .btn-confirm:active {
+    transform: translateY(0);
+}
+
+/* ════════════════════════════════════════════════
+       CONFIRMATION SCREEN
+    ════════════════════════════════════════════════ */
+.booking-root #confirmation-screen {
+    display: none;
+    width: 100%;
+    max-width: 780px;
+    padding-top: 40px;
+}
+
+#confirmation-screen {
+    margin-left: 270px;
+}
+
+/* ── Success badge ─────────────────────────────── */
+.booking-root .success-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 32px;
+    animation: br-fadeUp 0.55s ease both;
+}
+
+.booking-root .success-icon {
+    width: 72px;
+    height: 72px;
+    background: #dcfce7;
+    border: 2px solid #bbf7d0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 34px;
+    animation: br-popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.booking-root .success-badge h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+    font-style: normal;
+}
+
+.booking-root .success-badge p {
+    font-size: 15px;
+    color: #6b7280;
+}
+
+/* ── Confirmation card ─────────────────────────── */
+.booking-root .confirm-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 36px 44px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+    animation: br-fadeUp 0.65s ease 0.15s both;
+}
+
+/* ── Booking ID strip ──────────────────────────── */
+.booking-root .booking-id-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+}
+
+.booking-root .booking-id-strip .bid-label {
+    font-size: 13px;
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.booking-root .booking-id-strip .bid-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #16a34a;
+    letter-spacing: 0.08em;
+}
+
+/* ── Detail grid ───────────────────────────────── */
+.booking-root .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.booking-root .detail-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+.booking-root .detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.booking-root .detail-item .d-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+    font-style: normal;
+}
+
+.booking-root .detail-item .d-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+    font-style: normal;
+}
+
+/* ── Book Another Ride button ──────────────────── */
+.booking-root .btn-another {
+    display: block;
+    width: 100%;
+    height: 52px;
+    margin-top: 28px;
+    background: transparent;
+    color: #1f2937;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 2px solid #1f2937;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.booking-root .btn-another:hover {
+    background: #1f2937;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(31, 41, 55, 0.22);
+    transform: translateY(-1px);
+}
+
+.booking-root .btn-another:active {
+    transform: translateY(0);
+}
+
+/* ── Booking screen inner wrapper ──────────────── */
+.booking-root #booking-screen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+}
+
+/* ── Keyframes (prefixed to avoid collisions) ──── */
+@keyframes br-fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes br-popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 580px) {
+
+    .booking-root .br-card,
+    .booking-root .confirm-card {
+        padding: 28px 20px;
+    }
+
+    .booking-root .br-grid-2,
+    .booking-root .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-root .detail-item.full-width {
+        grid-column: 1;
+    }
+
+    .booking-root .page-header h1,
+    .booking-root .success-badge h1 {
+        font-size: 26px;
+    }
+}
+
+/* ===== RENTAL PRICE PER DAY ===== */
+.price-feature {
+    background: #ffffff;
+    border: 0px solid #222222;
+    border-radius: 20px;
+}
+
+.price-tag {
+    color: #111111 !important;
+    font-size: 37px !important;
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+.per-day {
+    font-size: 16px;
+    color: #555555;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+/* ===== PRICING SUMMARY IN CONFIRMATION ===== */
+.pricing-summary {
+    background: #f9f9f9;
+    border: 0px solid #222222;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #dddddd;
+    font-size: 16px;
+}
+
+.price-row:last-child {
+    border-bottom: none;
+}
+
+.total-row {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 2px solid #111111 !important;
+    border-bottom: none !important;
+}
+
+.total-row .price-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.total-row .price-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111111;
+}
+
+.price-val {
+    font-weight: 600;
+    color: #333;
+}
+
+/* ===== PRICE PREVIEW IN BOOKING FORM ===== */
+.price-preview {
+    margin: 20px 0;
+    animation: fadeIn 0.3s ease;
+}
+
+.price-preview-inner {
+    background: #ffffff;
+    border: 2px solid #222222;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #111111;
+    font-size: 15px;
+}
+
+.pp-total {
+    font-size: 19px;
+    font-weight: 800;
+    color: #111111;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Booking History Cards ── */
+.history-card {
+    background: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+}
+
+.hc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.hc-carname {
+    color: #f0a500;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.hc-bid {
+    background: #f0a500;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.hc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.hc-label {
+    color: #666;
+}
+
+.hc-total {
+    color: #f0a500;
+    font-weight: bold;
+}
+
+.hc-date {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888;
+}
+
+/* ── Booking History Page ── */
+#booking-history {
+    display: none;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.bh-wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.bh-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.bh-title {
+    color: #333;
+    margin: 0;
+}
+
+.bh-count {
+    background: #f0a500;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.bh-back-btn {
+    background: #ccc;
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.bh-no-bookings {
+    display: none;
+    text-align: center;
+    color: #888;
+    padding: 30px;
+}
+
+.history-card {
+    display: none;
+    background: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+}
+
+/* ── Navbar Account Button ── */
+.nav-account-wrapper {
+    position: relative;
+    margin-left: 12px;
+}
+
+.nav-account-btn {
+    background: #f0a500;
+    color: #000;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-account-arrow {
+    font-size: 10px;
+}
+
+.nav-account-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    min-width: 200px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+.nav-account-dropdown.open {
+    display: block;
+}
+
+.nav-account-email {
+    font-size: 13px;
+    color: #555;
+    margin: 0 0 10px 0;
+    word-break: break-all;
+    font-weight: bold;
+}
+
+.nav-dropdown-divider {
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+.nav-dropdown-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 8px 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    border-radius: 6px;
+}
+
+.nav-dropdown-btn:hover {
+    background: #f5f5f5;
+}
+
+.nav-logout-btn {
+    color: red;
+}
+
+.nav-login-btn {
+    color: #f0a500;
+    font-weight: bold;
+}
